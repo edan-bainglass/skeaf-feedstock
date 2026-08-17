@@ -16,7 +16,14 @@ build:
   number: 1
   skip: win
   script:
-    - $FC $FFLAGS -std=legacy -fopenmp -o skeaf src/skeaf_v1p3p0_r149.F90
+    - if: linux
+      then:
+        - $FC $FFLAGS -std=legacy -fopenmp -o skeaf src/skeaf_v1p3p0_r149.F90
+    - if: osx
+      then:
+        # On macOS, -fopenmp may inject -lgomp into the link command.
+        # We inject -lomp (llvm-openmp) explicitly instead.
+        - $FC $FFLAGS -std=legacy -fopenmp -o skeaf src/skeaf_v1p3p0_r149.F90 -L"${PREFIX}/lib" -lomp
     - $FC $FFLAGS -std=legacy -o ELK_exciting_BXSFconverter src/ELK_exciting_BXSFconverter_v04.F90
     - $FC $FFLAGS -std=legacy -o memoryestimateskeaf src/memoryestimateskeaf_for_v1p3p0_r149.F90
     - $FC $FFLAGS -std=legacy -o simbxsf_barrel src/simbxsf_barrel_v02.F90
