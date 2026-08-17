@@ -13,7 +13,7 @@ source:
   sha256: 369e7e4180e34ffc68b2265911975602ad56abf0db1506e4f882969effce195c
 
 build:
-  number: 0
+  number: 1
   skip: win
   script:
     - $FC $FFLAGS -std=legacy -fopenmp -o skeaf src/skeaf_v1p3p0_r149.F90
@@ -36,6 +36,11 @@ requirements:
   build:
     - ${{ compiler("fortran") }}
     - ${{ stdlib("c") }}
+  host:
+    - if: linux
+      then: libgomp
+    - if: osx
+      then: llvm-openmp
 
 tests:
   - package_contents:
